@@ -1,21 +1,23 @@
 pub struct Solution;
 
-impl Solution {
+impl Solution  {
     pub fn two_sum(nums: Vec<i32>, target: i32) -> Vec<i32> {
+        use std::collections::HashMap;
+
+        let mut used: HashMap<i32, i32> = HashMap::new();
         let mut answer: Vec<i32> = Vec::new();
-        
-        for (i, value1) in nums.iter().enumerate() {
-            for (j, value2) in nums.iter().skip(i + 1).enumerate() {
-                if target - value2 == *value1 {
-                    answer.push(j as i32 + 1 + i as i32);
-                    answer.push(i as i32);
+
+        HashMap::insert(&mut used, nums[0], 0);
+        for (index, num) in nums.iter().enumerate() {
+                if used.contains_key(&(target - num)) { 
+                    answer.push(index as i32);
+                    answer.push(*(used.get(&(target - num)).unwrap()));   
+                    
+                    return answer
                 }
-            }
         }
-        
+
         answer
-
-
     }
 }
 
