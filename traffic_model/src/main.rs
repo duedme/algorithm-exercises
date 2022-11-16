@@ -8,4 +8,5 @@ fn main() {
     Road::mutate_road(&mut road );
     println!("{}", Road::generate_printing_road(&road));
 
+//    println!("{}", 200%132);
 }
