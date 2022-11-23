@@ -1,4 +1,4 @@
-# First Problem
+# Two Sum
 
 ## The problem to be solved is the following:
 
