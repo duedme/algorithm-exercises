@@ -118,6 +118,7 @@ type List = Option<Box<ListNode>>;
  impl Solution {
     pub fn add_two_numbers(l1: Option<Box<ListNode>>, l2: Option<Box<ListNode>>) -> Option<Box<ListNode>> {
         let mut returning_node: ListNode = ListNode::new(0);
+        let mut current: ListNode = ListNode::new(0);
         let mut carry = 0;
         let mut l1 = &l1;
         let mut l2 = &l2;
@@ -130,7 +131,7 @@ type List = Option<Box<ListNode>>;
                 (Some(n1), Some(n2)) => {
                     l1 = &n1.next;
                     l2 = &n2.next;
-                    println!("{}",n1.val + n2.val);
+                    println!("\n{}",n1.val + n2.val);
                     n1.val + n2.val
                 },
                 (Some(n1), None) => {
@@ -150,20 +151,23 @@ type List = Option<Box<ListNode>>;
             else { save_is_bigger = false; println!("no es mayor");};
 
             if carry == 0 {
-                returning_node.val = save;
-                println!("carry es cero y el valor del nodo es: {}", returning_node.val);
+                current.val = save;
+                println!("carry es cero y el valor del nodo es: {}", current.val);
             } else {
-                returning_node.val = save + 1;
-                println!("carry no es cero y el valor del nodo es: {}", returning_node.val);
+                current.val = save + 1;
+                println!("carry no es cero y el valor del nodo es: {}", current.val);
             }
 
             if save_is_bigger { carry = 1; };
             println!("carry final es: {carry}");
-
-            let current: ListNode = returning_node.clone();
             println!("Current: {:?}", current);
-            
-            returning_node.next = Some(Box::new(current));
+            returning_node = current.clone();
+            println!("Returning_node es: {:?}", returning_node);
+            current.next = Some(Box::new(ListNode::new(0)));
+            println!("Current.next es: {:?}", current);
+            returning_node.next = current.next;
+            println!("Returning_node.next es: {:?}", returning_node);
+            current = *returning_node.clone().next.unwrap();
         }
 
         Some(Box::new(returning_node))
