@@ -1,4 +1,4 @@
-pub struct Solution;
+/*pub struct Solution;
 
 #[derive(PartialEq, Eq, Clone, Debug)]
 pub struct ListNode {
@@ -82,8 +82,93 @@ impl Solution {
         result
     }
 }
+*/
 
 type List = Option<Box<ListNode>>;
+
+#[derive(PartialEq, Eq, Clone, Debug)]
+ pub struct ListNode {
+   pub val: i32,
+   pub next: Option<Box<ListNode>>
+ }
+ 
+ impl ListNode {
+   #[inline]
+   fn new(val: i32) -> Self {
+     ListNode {
+       next: None,
+       val
+     }
+   }
+ }
+
+ fn to_list(vector: Vec<i32>) -> List {
+    let mut cur = None;
+
+    for &place in vector.iter().rev() {
+        let mut new_node = ListNode::new(place);
+        new_node.next = cur;
+        cur = Some(Box::new(new_node));
+    }
+
+    cur
+ }
+ pub struct Solution;
+
+ impl Solution {
+    pub fn add_two_numbers(l1: Option<Box<ListNode>>, l2: Option<Box<ListNode>>) -> Option<Box<ListNode>> {
+        let mut returning_node: ListNode = ListNode::new(0);
+        let mut carry = 0;
+        let mut l1 = &l1;
+        let mut l2 = &l2;
+        
+        //Aún no contempla fin del ciclo.
+        loop {
+            //Usar unwrap no contempla cuando se acabe la lista y el resultado sea None.
+            let mut save: i32 = match (l1, l2) {
+                (None, None) => break,
+                (Some(n1), Some(n2)) => {
+                    l1 = &n1.next;
+                    l2 = &n2.next;
+                    println!("{}",n1.val + n2.val);
+                    n1.val + n2.val
+                },
+                (Some(n1), None) => {
+                    l1 = &n1.next;
+                    n1.val
+                },
+                (None, Some(n2)) => {
+                    l2 = &n2.next;
+                    n2.val
+                },
+            };
+
+            println!("Save es: {}", save);
+
+            let save_is_bigger: bool;
+            if save > 9 { save = save - 10; save_is_bigger = true;println!("Save era mayor y ahora es: {save}"); }
+            else { save_is_bigger = false; println!("no es mayor");};
+
+            if carry == 0 {
+                returning_node.val = save;
+                println!("carry es cero y el valor del nodo es: {}", returning_node.val);
+            } else {
+                returning_node.val = save + 1;
+                println!("carry no es cero y el valor del nodo es: {}", returning_node.val);
+            }
+
+            if save_is_bigger { carry = 1; };
+            println!("carry final es: {carry}");
+
+            let current: ListNode = returning_node.clone();
+            println!("Current: {:?}", current);
+            
+            returning_node.next = Some(Box::new(current));
+        }
+
+        Some(Box::new(returning_node))
+    }
+}
 
 fn main() {
     assert_eq!(
