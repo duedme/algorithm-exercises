@@ -130,25 +130,26 @@ type List = Option<Box<ListNode>>;
             let save: i32 = match (l1, l2) {
                 (None, None) => {
                     all_none = true;
-                    carry
-                }
+                    0
+                },
                 (Some(n1), Some(n2)) => {
                     l1 = &n1.next;
                     l2 = &n2.next;
-                    n1.val + n2.val + carry
+                    n1.val + n2.val
                 },
                 (Some(n1), None) => {
                     l1 = &n1.next;
-                    n1.val + carry
+                    n1.val
                 },
                 (None, Some(n2)) => {
                     l2 = &n2.next;
-                    n2.val + carry
+                    n2.val
                 },
             };
 
-            carry = if save > 9 { 1 } else { 0 };
-            *current = ListNode::new(save % 10 );
+            let val = if carry == 1 { save + carry } else { save };
+            *current = ListNode::new(val % 10 );
+            carry = if val > 9 { 1 } else { 0 };
 
             if l1.is_some() || l2.is_some() || carry != 0 {
                 current.next = Some(Box::new(ListNode::new(0)));
