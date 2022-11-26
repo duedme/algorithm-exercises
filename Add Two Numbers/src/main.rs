@@ -123,9 +123,7 @@ type List = Option<Box<ListNode>>;
         let mut l1 = &l1;
         let mut l2 = &l2;
         
-        //Aún no contempla fin del ciclo.
         while l1.is_some() || l2.is_some() || carry == 1 {
-            //Usar unwrap no contempla cuando se acabe la lista y el resultado sea None.
             let mut all_none = false;
             let save: i32 = match (l1, l2) {
                 (None, None) => {
