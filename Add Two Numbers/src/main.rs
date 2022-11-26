@@ -126,60 +126,37 @@ type List = Option<Box<ListNode>>;
         //Aún no contempla fin del ciclo.
         while l1.is_some() || l2.is_some() || carry == 1 {
             //Usar unwrap no contempla cuando se acabe la lista y el resultado sea None.
-            println!("Está pasando por el principio");
             let mut all_none = false;
             let save: i32 = match (l1, l2) {
                 (None, None) => {
-                    println!("None, None. Carry: {carry}");
                     all_none = true;
                     carry
                 }
                 (Some(n1), Some(n2)) => {
-                    println!("Some, Some");
                     l1 = &n1.next;
                     l2 = &n2.next;
-                    println!("\n{}",n1.val + n2.val);
                     n1.val + n2.val + carry
                 },
                 (Some(n1), None) => {
-                    println!("Some, None");
                     l1 = &n1.next;
                     n1.val + carry
                 },
                 (None, Some(n2)) => {
-                    println!("None, Some");
                     l2 = &n2.next;
                     n2.val + carry
                 },
             };
 
-
-            println!("Save es: {}", save);
-
-
             carry = if save > 9 { 1 } else { 0 };
             *current = ListNode::new(save % 10 );
-            println!("Val actual es: {}", current.val);
 
-            if carry == 0 {
-                println!("Carry es cero");
-            };
-            println!("El valor actual del nodo es: {}", current.val);
-
-            println!("Current: {:?}", current);
             if l1.is_some() || l2.is_some() || carry != 0 {
-                println!("Está creando otro nodo");
                 current.next = Some(Box::new(ListNode::new(0)));
-                println!("Current: {:?}", current);
                 current = current.next.as_mut().unwrap();
             };
-            //current = current.next.as_mut().unwrap();
-//            println!("Current.next es: {:?}", current);
 
 
-            println!("\tCarry al final es: {carry}");
-            if l1.is_none() && l1.is_none() { println!("\tya todo es None"); };
-            if all_none && carry == 0 { println!("Está haciendo break"); break; };
+            if all_none && carry == 0 { break; };
 
         }
 
