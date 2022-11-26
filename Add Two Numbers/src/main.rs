@@ -126,39 +126,48 @@ type List = Option<Box<ListNode>>;
         //Aún no contempla fin del ciclo.
         loop {
             //Usar unwrap no contempla cuando se acabe la lista y el resultado sea None.
-            let mut save: i32 = match (l1, l2) {
-                (None, None) => break,
+            let mut all_none = false;
+            let save: i32 = match (l1, l2) {
+                (None, None) => {
+                    all_none = true;
+                    carry
+                }
                 (Some(n1), Some(n2)) => {
                     l1 = &n1.next;
                     l2 = &n2.next;
                     println!("\n{}",n1.val + n2.val);
-                    n1.val + n2.val
+                    n1.val + n2.val + carry
                 },
                 (Some(n1), None) => {
                     l1 = &n1.next;
-                    n1.val
+                    n1.val + carry
                 },
                 (None, Some(n2)) => {
                     l2 = &n2.next;
-                    n2.val
+                    n2.val + carry
                 },
             };
 
             println!("Save es: {}", save);
 
-            let save_is_bigger: bool;
+            /*let save_is_bigger: bool;
             if save > 9 { save = save - 10; save_is_bigger = true;println!("Save era mayor y ahora es: {save}"); }
             else { save_is_bigger = false; println!("no es mayor");};
+            */
 
-            if carry == 0 {
+/*             if carry == 0 {
                 current.val = save;
                 println!("carry es cero y el valor del nodo es: {}", current.val);
             } else {
                 current.val = save + 1;
                 println!("carry no es cero y el valor del nodo es: {}", current.val);
             }
+*/
+            current.val = save % 10;
+            carry = save / 10;
+            println!("carry es cero y el valor del nodo es: {}", current.val);
 
-            if save_is_bigger { carry = 1; };
+//            if save_is_bigger { carry = 1; };
             println!("carry final es: {carry}");
             println!("Current: {:?}", current);
             returning_node = current.clone();
@@ -168,6 +177,8 @@ type List = Option<Box<ListNode>>;
             returning_node.next = current.next;
             println!("Returning_node.next es: {:?}", returning_node);
             current = *returning_node.clone().next.unwrap();
+
+            if all_none { break; }
         }
 
         Some(Box::new(returning_node))
