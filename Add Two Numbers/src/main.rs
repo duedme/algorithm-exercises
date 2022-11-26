@@ -118,67 +118,69 @@ type List = Option<Box<ListNode>>;
  impl Solution {
     pub fn add_two_numbers(l1: Option<Box<ListNode>>, l2: Option<Box<ListNode>>) -> Option<Box<ListNode>> {
         let mut returning_node: ListNode = ListNode::new(0);
-        let mut current: ListNode = ListNode::new(0);
+        let mut current = &mut returning_node;
         let mut carry = 0;
         let mut l1 = &l1;
         let mut l2 = &l2;
         
         //Aún no contempla fin del ciclo.
-        loop {
+        while l1.is_some() || l2.is_some() || carry == 1 {
             //Usar unwrap no contempla cuando se acabe la lista y el resultado sea None.
+            println!("Está pasando por el principio");
             let mut all_none = false;
             let save: i32 = match (l1, l2) {
                 (None, None) => {
+                    println!("None, None. Carry: {carry}");
                     all_none = true;
                     carry
                 }
                 (Some(n1), Some(n2)) => {
+                    println!("Some, Some");
                     l1 = &n1.next;
                     l2 = &n2.next;
                     println!("\n{}",n1.val + n2.val);
                     n1.val + n2.val + carry
                 },
                 (Some(n1), None) => {
+                    println!("Some, None");
                     l1 = &n1.next;
                     n1.val + carry
                 },
                 (None, Some(n2)) => {
+                    println!("None, Some");
                     l2 = &n2.next;
                     n2.val + carry
                 },
             };
 
+
             println!("Save es: {}", save);
 
-            /*let save_is_bigger: bool;
-            if save > 9 { save = save - 10; save_is_bigger = true;println!("Save era mayor y ahora es: {save}"); }
-            else { save_is_bigger = false; println!("no es mayor");};
-            */
 
-/*             if carry == 0 {
-                current.val = save;
-                println!("carry es cero y el valor del nodo es: {}", current.val);
-            } else {
-                current.val = save + 1;
-                println!("carry no es cero y el valor del nodo es: {}", current.val);
-            }
-*/
-            current.val = save % 10;
-            carry = save / 10;
-            println!("carry es cero y el valor del nodo es: {}", current.val);
+            carry = if save > 9 { 1 } else { 0 };
+            *current = ListNode::new(save % 10 );
+            println!("Val actual es: {}", current.val);
 
-//            if save_is_bigger { carry = 1; };
-            println!("carry final es: {carry}");
+            if carry == 0 {
+                println!("Carry es cero");
+            };
+            println!("El valor actual del nodo es: {}", current.val);
+
             println!("Current: {:?}", current);
-            returning_node = current.clone();
-            println!("Returning_node es: {:?}", returning_node);
-            current.next = Some(Box::new(ListNode::new(0)));
-            println!("Current.next es: {:?}", current);
-            returning_node.next = current.next;
-            println!("Returning_node.next es: {:?}", returning_node);
-            current = *returning_node.clone().next.unwrap();
+            if l1.is_some() || l2.is_some() || carry != 0 {
+                println!("Está creando otro nodo");
+                current.next = Some(Box::new(ListNode::new(0)));
+                println!("Current: {:?}", current);
+                current = current.next.as_mut().unwrap();
+            };
+            //current = current.next.as_mut().unwrap();
+//            println!("Current.next es: {:?}", current);
 
-            if all_none { break; }
+
+            println!("\tCarry al final es: {carry}");
+            if l1.is_none() && l1.is_none() { println!("\tya todo es None"); };
+            if all_none && carry == 0 { println!("Está haciendo break"); break; };
+
         }
 
         Some(Box::new(returning_node))
@@ -187,7 +189,7 @@ type List = Option<Box<ListNode>>;
 
 fn main() {
     assert_eq!(
-        Solution::add_two_numbers(to_list(vec![2, 4, 3]), to_list(vec![5, 6, 4])),
-        to_list(vec![7, 0, 8])
+        Solution::add_two_numbers(to_list(vec![2, 2, 2]), to_list(vec![2, 8])),
+        to_list(vec![4, 0, 3])
     );
 }
