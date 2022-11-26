@@ -1,4 +1,4 @@
-pub struct Solution;
+/*pub struct Solution;
 
 #[derive(PartialEq, Eq, Clone, Debug)]
 pub struct ListNode {
@@ -82,12 +82,90 @@ impl Solution {
         result
     }
 }
+*/
 
 type List = Option<Box<ListNode>>;
 
+#[derive(PartialEq, Eq, Clone, Debug)]
+ pub struct ListNode {
+   pub val: i32,
+   pub next: Option<Box<ListNode>>
+ }
+ 
+ impl ListNode {
+   #[inline]
+   fn new(val: i32) -> Self {
+     ListNode {
+       next: None,
+       val
+     }
+   }
+ }
+
+ fn to_list(vector: Vec<i32>) -> List {
+    let mut cur = None;
+
+    for &place in vector.iter().rev() {
+        let mut new_node = ListNode::new(place);
+        new_node.next = cur;
+        cur = Some(Box::new(new_node));
+    }
+
+    cur
+ }
+ pub struct Solution;
+
+ impl Solution {
+    pub fn add_two_numbers(l1: Option<Box<ListNode>>, l2: Option<Box<ListNode>>) -> Option<Box<ListNode>> {
+        let mut returning_node: ListNode = ListNode::new(0);
+        let mut current = &mut returning_node;
+        let mut carry = 0;
+        let mut l1 = &l1;
+        let mut l2 = &l2;
+        
+        while l1.is_some() || l2.is_some() || carry == 1 {
+            let mut all_none = false;
+            let save: i32 = match (l1, l2) {
+                (None, None) => {
+                    all_none = true;
+                    0
+                },
+                (Some(n1), Some(n2)) => {
+                    l1 = &n1.next;
+                    l2 = &n2.next;
+                    n1.val + n2.val
+                },
+                (Some(n1), None) => {
+                    l1 = &n1.next;
+                    n1.val
+                },
+                (None, Some(n2)) => {
+                    l2 = &n2.next;
+                    n2.val
+                },
+            };
+
+            let val = if carry == 1 { save + carry } else { save };
+            *current = ListNode::new(val % 10 );
+            carry = if val > 9 { 1 } else { 0 };
+
+            if l1.is_some() || l2.is_some() || carry != 0 {
+                current.next = Some(Box::new(ListNode::new(0)));
+                current = current.next.as_mut().unwrap();
+            };
+
+
+            if all_none && carry == 0 { break; };
+
+        }
+
+        Some(Box::new(returning_node))
+    }
+}
+
 fn main() {
     assert_eq!(
-        Solution::add_two_numbers(to_list(vec![2, 4, 3]), to_list(vec![5, 6, 4])),
-        to_list(vec![7, 0, 8])
+        Solution::add_two_numbers(to_list(vec![2, 2, 2]), to_list(vec![2, 8])),
+        to_list(vec![4, 0, 3])
     );
 }
