@@ -1,4 +1,4 @@
-use std::{io, borrow::Borrow};
+use std::io;
 extern crate rand;
 use rand::Rng;
 // Generar población
