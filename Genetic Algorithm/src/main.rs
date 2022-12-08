@@ -11,7 +11,7 @@ fn main() {
     let how_precise = String::from("¿Cuánto error soportará el algoritmo?");
     let how_many_iterations = String::from("¿Cuántas iteraciones deben haber?");
     let precision = read_string(how_precise);
-    let interations = read_string(how_many_iterations);
+    let iterations = read_string(how_many_iterations);
     let num_of_candidates = 10;
     let xmin = -10;
     let xmax = 10;
@@ -20,30 +20,46 @@ fn main() {
     // Aptitud de la población.
     let population_results: Vec<f64> = evaluation(&population, &num_of_candidates);
     // Los mejores candidatos.
-    let lowest_results = picking(&population_results);
-    println!("Population: {:?}, \nPopulaton_results: {:?}, \nLowest_results: {:?}", population, population_results, lowest_results);
+    let best_results = picking(&population_results);
+    println!("Population: {:?}, \nPopulaton_results: {:?}, \nBest_results: {:?}", population, population_results, best_results);
 
 }
 
 fn picking(population_results: &Vec<f64>) -> HashMap<usize, f64> {
     let mut selection = HashMap::new();
     let number_of_selected = 3;
+    let mut abs = make_absolute_vector(population_results);
 
-    let mut i = 1000;
-    let mut lowest = (population_results[0]).abs();
-    let mut iterations = 0;
+    for _ in 0..number_of_selected {
+        let abs_iter = abs.clone();
+        let mut iterator = abs_iter.iter();
+        let mut lowest = iterator.next().unwrap(); let mut place = 0;
+        for i in 1..(abs.len() - 1) {
+            //let next = iterator.next();
+            let next = if let Some(thing) = iterator.next() { thing } else { break };
 
-    while iterations != number_of_selected {
-
-        for (index, number) in population_results.iter().enumerate() {
-            if selection.get(&index).is_some() { continue; };
-            if number.abs() < lowest.abs() { i = index; lowest = *number; };
-            selection.insert(i, lowest);
+            if lowest > next { lowest = next; place = i; };
         }
-        iterations += 1;
+
+        abs.remove(place);
+        selection.insert(place, *lowest);
     }
 
     selection
+}
+
+fn make_absolute_vector(original: &Vec<f64>) -> Vec<f64> {
+    let mut iterator = original.iter();
+    let mut abs: Vec<f64> = Vec::new();
+
+    for _ in 0..original.len() {
+        if let Some(thing) = iterator.next() {
+            abs.push(thing.abs());
+        }
+    }
+
+    println!("Vector de resultados original: {:?} \nVector de resultados absoluto: {:?}", original, abs);
+    abs
 }
 
 // Aquí va la función
