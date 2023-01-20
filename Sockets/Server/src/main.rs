@@ -20,7 +20,7 @@ fn main() -> std::io::Result<()> {
             let msg = from_utf8(&buf[..n]).unwrap();
             println!("{}", msg);
 
-            if msg == "adios" {
+            if msg == "bye" {
                 break;
             }
 
