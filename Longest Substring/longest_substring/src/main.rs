@@ -27,17 +27,34 @@ impl Solution {
 
             println!("{}", &backup[..1]);
             if main_list.starts_with(&backup[..1]) {
+                println!("Comienza con: {} \n", &backup[..1]);
                 let letter = main_list.remove(0);
                 main_list.push(letter);
+                backup.remove(0);
 
                 backup.clear();
-            }
+            } else if main_list.ends_with(&backup[..1]) {
+                println!("Termina con: {} \n", &backup[..1]);
+                let letter = main_list.pop().unwrap();
+                main_list.push(letter);
+                backup.remove(0);
+            };
         }
-        main_list.push_str(backup.as_str());
-        println!("backup {}, main {}\n", backup, main_list);
+        /*if !main_list.contains(backup.as_str()) { main_list.push_str(backup.as_str()) };
+        println!("backup {}, main {}\n", backup, main_list);*/
 
-        let answer = if main_list.chars().count() > backup.len() { main_list.len() }
-        else { backup.chars().count() } as i32;
+        for letter in backup.chars() {
+            if !main_list.contains(letter) { main_list.push(letter) };
+        };
+
+        /*if main_list != backup &&  {
+            println!("Pasamos por las igualdades: main: {}, backup: {}", main_list, backup);
+            main_list.push_str(backup.as_str());
+            return main_list.chars().count() as i32;
+        };*/
+
+        let answer = if main_list.chars().count() > backup.len() { println!("Main_list más grande con {}.", main_list.chars().count());main_list.len() }
+        else { println!("Backup más grande con {}.", backup.chars().count()); backup.chars().count() } as i32;
 
         answer
 
