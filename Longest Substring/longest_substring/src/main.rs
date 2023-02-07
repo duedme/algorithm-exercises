@@ -2,7 +2,6 @@ struct Solution;
 
 impl Solution {
     pub fn length_of_longest_substring(s: String) -> i32 {
-        println!("Palabra: {}", s);
         let mut list = String::new();
 
         let mut aux = String::new();
@@ -16,17 +15,9 @@ impl Solution {
         };
 
         while let Some(thing) = iter.next() {
-            println!("thing: {}", thing);
             if !aux.contains(thing) {
                 aux.push(thing);
-                println!("no contains, ahora aux: {}\n", aux);
             } else {
-                println!("sí contains, al principio aux: {}", aux);
-                /*for index in 0..(aux.rfind(thing).unwrap()) {
-                    println!("Índice: {}", index);
-                    let c = aux.remove(index);
-                    println!("Se removió: {}", c);
-                }*/
                 let mut letter: char;
                 loop {
                     letter = aux.remove(0);
@@ -37,7 +28,6 @@ impl Solution {
                     };
                 }
                 aux.push(thing);
-                println!("sí contains, al final aux: {}\n", aux);
             }
 
             if aux.chars().count() > list.chars().count() {
@@ -46,7 +36,6 @@ impl Solution {
         }
 
         let answer = list.chars().count();
-        println!("{m}", m = list);
         answer as i32
     }
 }
