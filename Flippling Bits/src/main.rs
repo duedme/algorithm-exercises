@@ -10,7 +10,7 @@ use std::io::{self, BufRead, Write};
  */
 
 fn flippingBits(n: i64) -> i64 {
-   4294967295 - n 
+   (i64::pow(2,32) - 1) - n
 }
 
 fn main() {
